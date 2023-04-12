@@ -1,0 +1,329 @@
+
+Identifying Patterns and Trends in                Campus  Placement  Data using  MachineLearning
+ 
+
+TEAM SIZE: 4
+TEAM LEADER:DHANALAKSHMI.T(20UCA1132)
+TEAM MEMBERS:: ISHWARYA.M(20UCA1133)
+                                MAHESWARI.A(20UCA1135)
+                                 MYILVIZHI.G(20UCA1137)
+
+     
+
+
+
+
+
+
+
+
+
+INTRODUCTION
+Campus recruitment is a strategy for sourcing, engaging and hiring young talent for internship and entry-level positions. College recruiting is typically a tactic for medium- to large-sized companies with high-volume recruiting needs, but can range from small efforts (like working with university career centers to source potential candidates) to large-scale operations (like visiting a wide array of colleges and attending recruiting events throughout the spring and fall semester).Campus recruitment often involves working with university career services centers and attending career fairs to meet in-person with college students and recent graduates.Our solution revolves around the placement season of a Business School in India. Where it has various factors on candidates getting hired such as work experience,exam percentage etc., Finally it contains the status of recruitment and remuneration details.
+
+We will be using algorithms such as KNN, SVM and ANN. We will train and test the data with these algorithms. From this the best model is selected and saved in .pkl format. We will be doing flask integration and IBM deployment.
+        
+To accomplish this, we have to complete all the activities listed below,
+-Data collection
+       Collect the dataset or create the dataset
+-Visualizing and analyzing data
+      Univariate analysis
+      Bivariate analysis
+       Multivariate analysis
+       Descriptive analysis
+-Data pre-processing
+       Checking for null values
+       Handling outlier
+       Handling categorical data
+        Splitting data into train and test
+-Model building
+        Import the model building libraries
+        Initializing the model
+       Training and testing the model
+       Evaluating performance of model
+       Save the model
+-Application Building
+       Create an HTML file
+       Build python code
+
+
+Problem Definition & Design Thinking
+2.1 Empathy map
+ 
+ 
+
+2.2 ideation &  brainstorming map screenshot
+
+ 
+
+Data Collection & Preparation
+ML depends heavily on data. It is the most crucial aspect that makes algorithm training possible. So this section allows you to download the required dataset.
+
+ 
+ 
+ 
+ 
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Student Placement Prediction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+input[type=text] 
+{
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+input[type=submit] 
+{
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 230px;
+
+}
+
+input[type=submit]:hover 
+{
+  background-color: #45a049;
+
+}
+
+.container
+ {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  display: flex;
+}
+
+.form_wrapper 
+{
+  flex:1;
+  text-align: center;
+}
+
+.selects
+{
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical; 
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+  <formaction="/send",name="send_data",method="post">
+   <div class="form-group">
+  <label for="gender">Gender</label>
+  <select name="gender" class = "selects" >
+    <option  value="M">Male</option>
+    <option value = "F">Female</option>
+  </select>
+</div>
+    
+    <label>Secondary Education Percentage - 10th Grade</label>
+    <input type="text"  name="ssc_p" placeholder="10th grade in percentage">
+ <label>Higher Secondary Education Percentage - 12th Grade</label>
+    <input type="text" name="hsc_p" placeholder="12th Percentage">
+  <div class="form-group">
+      <label for="hsc_s1">Specialization in Higher Secondary Education</label>
+      <select name="hsc_s1" class = "selects" >
+        <option  value="Commerce">Commerce</option>
+        <option value = "Science">Science</option>
+        <option value = "Others">Others</option>
+      </select>
+    </div>
+    <label>Degree Percentage</label>
+    <input type="text" name="degree_p" placeholder="Degree percentage"
+     <div class="form-group">
+      <label for="degree_t1">Under Graduation(Degree type)- Field of degree education</label>
+      <select name="degree_t1" class = "selects" >
+        <option  value="Sci&Tech">Sci&Tech</option>
+        <option value= "Comm&Mgmt">Comm&Mgmt</option>
+        <option value = "Arts">Arts</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="workex1">Work Experience</label>
+      <select name="workex1" class = "selects" >
+        <option  value="No">No</option>
+        <option value = "Yes">Yes</option>
+      </select>
+    </div>
+    
+    <label>Employability test percentage ( conducted by college)</label>
+    <input type="text" name="etest_p" placeholder="in percentage">
+
+    <div class="form-group">
+      <label for="specialisation1">Specialization</label>
+      <select name="specialisation1" class = "selects" >
+        <option  value="Mkt&HR">Mkt&HR</option>
+        <option value = "Mkt&Fin">Mkt&Fin</option>
+      </select>
+    </div>
+
+    <label>MBA Percentage</label>
+    <input type="text" name="mba_p" placeholder="In percentage">
+    
+
+    <div class="form_wrapper">
+       <input type="submit" value="Submit"/>
+    </div>
+
+  </form>
+
+
+</div>
+</body>
+</html>
+
+ 
+
+<div class="prediction">
+    <h2>Placement Prediction : {{ res }}</h2>
+
+</div>
+</body>
+</html>
+
+ 
+
+from flask import Flask, render_template, request
+import pickle
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+
+app = Flask(__name__, template_folder='template')
+model_name = open('svm_model.pkl','rb')
+svm_model=pickle.load(model_name)
+
+
+@app.route('/')
+def home():
+    return render_template("home.html")
+
+
+
+@app.route('/send', methods=['GET','POST'])
+def predict():
+    if request.method == "POST" :
+    
+        Gender = request.form['gender']
+        ssc_p = request.form['ssc_p']
+        hsc_p = request.form['hsc_p']
+        hsc_s = request.form['hsc_s1']
+        degree_p = request.form['degree_p']
+        degree_t = request.form['degree_t1']
+        workex = request.form['workex1']
+        etest_p = request.form['etest_p']
+        specialisation = request.form['specialisation1']
+        mba_p = request.form['mba_p']
+       
+        
+        if Gender == 'M':
+            gender = 0
+        else:
+            gender = 1
+    
+        
+        if degree_t == 'Sci&Tech':
+            degree_t1 = 2
+        elif degree_t == 'Comm&Mgmt':
+            degree_t1 = 0
+        else:
+            degree_t1 = 1 
+    
+        if workex == 'Yes':
+            workex1 = 1
+        else:
+            workex1 = 0
+        
+        if hsc_s == 'Commerce':
+            hsc_s1 = 1
+        elif hsc_s == 'Science':
+            hsc_s1 = 2
+        else:
+            hsc_s1 = 0
+        
+        if specialisation == 'Mkt&HR':
+            specialisation1 = 1
+        else:
+            specialisation1 = 0
+    
+        Pred_args=[gender,ssc_p,hsc_p,hsc_s1,degree_p,degree_t1,workex1,etest_p,specialisation1,mba_p]
+        pred_args=np.array(Pred_args)
+        pred_args=pred_args.reshape(1,-1)
+        
+        y_pred=svm_model.predict(pred_args)
+        y_pred=y_pred[0]
+        if y_pred == 0:
+            return render_template('show.html',res="Work Hard!!! Chances are less") 
+        else:
+            return render_template('show.html',res=" You are Doing well!! You Will Get placements")
+    
+    
+    
+
+
+if __name__ == '__main__':
+    app.run()
+output:
+ 
+ 
+output:
+ 
+
+
+ name: Deploy to Heroku
+  uses: AkhileshNS/heroku-deploy@v3.12.12
+
+
+web: gunicorn app:app
+Flask==2.1.1
+gunicorn==20.1.0
+itsdangerous==2.1.2
+Jinja2==3.1.1
+MarkupSafe==2.1.1
+Werkzeug==2.1.1
+numpy>=1.22.3
+scipy>=1.8.0
+scikit-learn>=1.0.2
+matplotlib>=3.5.1
+pandas>=1.4.2
+streamlit==1.8.1
+
+
+
+
+
+
+
+
+
+
+
+
